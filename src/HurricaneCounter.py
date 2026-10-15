@@ -40,9 +40,6 @@ storm_track_line = "memory\\tracklines"
 # County data URL
 usa_counties = 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Counties_Generalized_Boundaries/FeatureServer/0'
 
-# Output variable & path
-affected_counties = str(processed_folder_path / 'affected_counties.shp')
-
 # %%
 # Select track points for a single storm
 arcpy.analysis.Select(
@@ -71,55 +68,3 @@ select_result = arcpy.management.SelectLayerByLocation(
 
 # Save result to a variable
 select_output = select_result.getOutput(0)
-
-# %%
-# Create model output
-arcpy.management.CopyFeatures(
-    in_features=select_output,
-    out_feature_class=affected_counties
-)
-
-# %%
-# View output
-
-# Import arcgis package
-import arcgis
-
-# Create "gis" object
-gis = arcgis.GIS()
-
-# Create a map
-my_map = gis.map()
-
-# Set the basemap to oceans
-my_map.basemap.basemap = "oceans"
-
-# Create feature layers from strom tracks & affected counties
-track_lyr = arcgis.GeoAccessor.from_featureclass(storm_track_line)
-counties_lyr = arcgis.GeoAccessor.from_featureclass(affected_counties)
-
-# Add layers to the map
-my_map.content.add(counties_lyr)
-my_map.content.add(track_lyr)
-
-# Show the map
-my_map
-
-# %%
-# Plot the number of people affected by storm, by state
-
-# Create a plot of people affected by state
-the_plot = (
-    counties_lyr.
-    groupby('STATE_NAME')
-    .agg({'POPULATION':'sum'})
-    .sort_values(by='POPULATION', ascending=False)
-    .plot(
-        kind='barh',
-        title=f'{storm_name}-{storm_season}',
-        xlabel='People affected',
-        ylabel=''
-    )
-)
-
-
