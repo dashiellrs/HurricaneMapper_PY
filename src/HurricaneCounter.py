@@ -30,8 +30,8 @@ arcpy.env.workspace = str(raw_folder_path)
 # Define model variables
 
 # Select tool
-storm_season = 2025
-storm_name = 'CHANTAL'
+storm_season = 2024
+storm_name = 'HELENE'
 storm_track_points = "memory\\selected_points"
 
 # Points to Line tool
@@ -68,3 +68,8 @@ select_result = arcpy.management.SelectLayerByLocation(
 
 # Save result to a variable
 select_output = select_result.getOutput(0)
+
+# %%
+# Count the affected counties
+select_count = arcpy.management.GetCount(select_output)
+county_total = int(select_count.getOutput(0))
