@@ -44,14 +44,14 @@ storm_track_line = "memory\\tracklines"
 usa_counties = 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Counties_Generalized_Boundaries/FeatureServer/0'
 
 # %%
-# Dictionary for storm seasons + name lists
+# Empty dictionary for storm seasons + name lists
 storm_dict = {}
 
 # Iterate through seasons
 years = range(2000, 2024)
 for year in years:
 
-    # List for storm names
+    # Empty list for storm names
     storm_list = []
 
     # Open search cursor
