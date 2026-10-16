@@ -44,28 +44,37 @@ storm_track_line = "memory\\tracklines"
 usa_counties = 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Counties_Generalized_Boundaries/FeatureServer/0'
 
 # %%
-# Make a list of storm names per season
+# Dictionary for storm seasons + name lists
+storm_dict = {}
 
-# Create empty list
-storm_list = []
+# Iterate through seasons
+years = range(2000, 2024)
+for year in years:
 
-# Open search cursor
-storms = arcpy.da.SearchCursor(
-    in_table = ibtracs,
-    field_names = ['NAME'],
-    where_clause = "SEASON = 2020"
-)
+    # List for storm names
+    storm_list = []
 
-# Iterate through storm data
-for row in storms:
-    name = row[0]
-    if name not in storm_list and name != "UNNAMED":
-        storm_list.append(name)
-    else:
-        continue
+    # Open search cursor
+    storms = arcpy.da.SearchCursor(
+        in_table = ibtracs,
+        field_names = ['NAME'],
+        where_clause = f"SEASON = {year}"
+    )
 
-# Delete cursor
-del storms
+    # Iterate through storm data
+    for row in storms:
+        name = row[0]
+        if name not in storm_list and name != "UNNAMED":
+            storm_list.append(name)
+        else:
+            continue
+
+    # Add season + name list to dictionary
+    storm_dict[f"{year}"] = storm_list
+
+    # Delete cursor
+    del storms
+
 
 # %%
 # Select track points for a single storm
